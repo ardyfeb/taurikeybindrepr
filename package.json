@@ -1,0 +1,55 @@
+{
+  "name": "oms",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "cross-env BROWSER=none craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.1.2",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@tauri-apps/api": "^1.0.0-rc.6",
+    "framer-motion": "^6.3.4",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
+    "valtio": "^1.6.1",
+    "web-vitals": "^2.1.4"
+  },
+  "devDependencies": {
+    "@craco/craco": "^6.4.3",
+    "@tauri-apps/cli": "^1.0.0-rc.12",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^16.11.36",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.5",
+    "cross-env": "^7.0.3",
+    "react-app-alias": "^2.2.0",
+    "typescript": "^4.7.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
