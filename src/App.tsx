@@ -1,12 +1,12 @@
 import { ChakraProvider } from '@chakra-ui/react'
 
-import { Layout } from '@/scenes/layout/Layout'
+import { Surface } from '@/scenes/surface/Surface'
 
 
 const App: React.FunctionComponent = props => {
   return (
     <ChakraProvider>
-      <Layout />
+      <Surface />
     </ChakraProvider>
   )
 }
