@@ -4,6 +4,9 @@ import { useMemo } from 'react'
 export interface TabsPaneProps {
   title: string
   active: boolean
+  onClick: any
+  tabItemStyle?: React.CSSProperties
+  tabContainerStyle?: React.CSSProperties
 }
 
 export const TabsPane: React.FunctionComponent<TabsPaneProps> = props => {
@@ -39,8 +42,8 @@ export const TabsPane: React.FunctionComponent<TabsPaneProps> = props => {
   )
 
   return (
-    <Box width="170px" pt={2}>
-      <Box py={2} px={3} {...innerComputedProps}>
+    <Box width="170px" pt={2} style={props.tabContainerStyle} onClick={props.onClick}>
+      <Box py={2} px={3} style={props.tabItemStyle} {...innerComputedProps}>
         <Text fontSize="sm" color="white">
           {props.title}
         </Text>
