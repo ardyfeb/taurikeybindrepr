@@ -76,6 +76,7 @@ export const DraggableContainer: React.FC<IDraggableContainer> = ({
   useImperativeHandle(draggableRef, () => ({
     onClickNewWidget
   }))
+
   useEffect(() => {
     if (savedLayoutType.length) {
       setWidgets(savedLayout[savedLayoutType]);
@@ -84,7 +85,7 @@ export const DraggableContainer: React.FC<IDraggableContainer> = ({
   //#endregion
 
 
-
+  //#region HANDLER
   const onLoadTab = (tab) => {
     const { id } = tab;
     const tabData = {
@@ -124,6 +125,9 @@ export const DraggableContainer: React.FC<IDraggableContainer> = ({
     const { id } = savedPanel;
     setActivePanelId(id);
   }
+  //#endregion
+
+  console.log({ content: <div>mem</div> })
   return (
     <>
       <DockLayout
@@ -132,7 +136,7 @@ export const DraggableContainer: React.FC<IDraggableContainer> = ({
         onLayoutChange={onLayoutChange}
         loadTab={onLoadTab}
         afterPanelLoaded={onPanelLoaded}
-        style={{ position: 'absolute', left: 10, top: 60, right: 10, bottom: 10 }}
+        style={{ position: 'absolute', left: 10, top: 10, right: 10, bottom: 10 }}
 
       />
     </>
