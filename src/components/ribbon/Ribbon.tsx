@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Box, Flex, Button } from '@chakra-ui/react'
-import { CloseIcon } from "@chakra-ui/icons";
 
-import { TabsPane } from "../tabs/TabsPane";
+import { RibbonTabs } from './RibbonTabs'
+import { useLayoutManager } from '@/hooks/useLayoutManager'
 
 interface IRibbon {
   onClickLayout: Function;
@@ -36,19 +36,17 @@ const SavedLayoutMenu = ({ onClickLayout }: any) => {
   return (
     <Flex
       px="2"
-      borderTopColor="gray.600"
-      borderTopWidth={1}
+      borderBottomColor="gray.600"
+      borderBottomWidth={1}
       bgColor="gray.700"
     >
       {
         layoutType.map((layout) => (
-          <TabsPane
+          <RibbonTabs
             active={selectedLayout === layout.type}
             title={layout.title}
             key={layout.type}
             onClick={() => onClickLayoutMenu(layout.type)}
-            tabContainerStyle={{ width: "auto", cursor: "pointer" }}
-            tabItemStyle={{ padding: "8px 20px", borderRadius: "2px 2px 0px 0px" }}
           />
         ))
       }
@@ -58,10 +56,19 @@ const SavedLayoutMenu = ({ onClickLayout }: any) => {
 
 
 export const Ribbon: React.FunctionComponent<IRibbon> = props => {
+  const layoutManager = useLayoutManager()
+
+  const addNewWidget = useCallback(
+    (): void => {
+      layoutManager.dock.addWidget()
+    },
+    [layoutManager]
+  )
+  
   return (
     <>
       <SavedLayoutMenu onClickLayout={props.onClickLayout} />
-      <Flex bgColor="gray.700" height="80px" padding={2}>
+      <Flex bgColor="gray.800" height="80px" padding={2}>
         <Box bg="transparent">
           <div>
             <Button
@@ -73,7 +80,8 @@ export const Ribbon: React.FunctionComponent<IRibbon> = props => {
               size="xs"
               bg="facebook.200"
               fontSize={10}
-              onClick={() => props.draggableRef.current?.onClickNewWidget("watchList")}
+              // onClick={() => props.draggableRef.current?.onClickNewWidget("watchList")}
+              onClick={addNewWidget}
             >
               Add Widget
             </Button>
