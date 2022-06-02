@@ -127,7 +127,6 @@ export const DraggableContainer: React.FunctionComponent<DraggableContainerProps
   const onPanelLoaded = (savedPanel, loadedPanel) => {
     // setActivePanelId(savedPanel.id);
   }
-
   return (
     <>
       <DockLayout
