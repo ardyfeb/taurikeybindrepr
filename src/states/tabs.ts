@@ -1,7 +1,8 @@
 import { LayoutBase, LayoutData } from 'rc-dock'
 import { proxy } from 'valtio'
+import { proxyWithComputed } from 'valtio/utils'
 
-export const tabs = proxy(
+export const tabs = proxyWithComputed(
   {
     active: '',
     child: [] as Array<
@@ -11,9 +12,12 @@ export const tabs = proxy(
         options: {
           closeable: boolean
         },
-        widget: LayoutBase
+        widgets?: LayoutData | string
       }
     >
+  },
+  {
+    currentActive: snap => snap.child.find(c => c.id == snap.active)
   }
 )
 
@@ -44,5 +48,13 @@ export function reorderTabs(startIndex: number, endIndex: number): void {
   if (endIndex != undefined) {
     tabs.child.splice(startIndex, 1);
     tabs.child.splice(endIndex, 0, selectedTab);
+  }
+}
+
+export function setTabWidgets(tabId: string, widgets: LayoutData): void  {
+  const childIdx  = tabs.child.findIndex(c => c.id == tabId)
+
+  if (!!~childIdx) {
+    tabs.child[childIdx].widgets = widgets
   }
 }

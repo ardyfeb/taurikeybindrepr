@@ -12,7 +12,6 @@ import { app, window } from '@tauri-apps/api'
 
 import { tabs } from '@/states/tabs'
 import { useLayoutManager } from '@/hooks/useLayoutManager'
-import { ArrayType } from '@/types/ArrayType'
 
 import { TabsPane } from './TabsPane'
 
@@ -24,13 +23,6 @@ export const Tabs: React.FunctionComponent = props => {
 
   const onDragEnd = useCallback(
     (result: DropResult, provided: ResponderProvided): void => {
-      const main = new window.WindowManager('main')
-
-      // if (window.appWindow.label != 'main') {
-        console.log('state')
-        console.log(layoutManager.dock.getLayoutState())
-      // }
-
       layoutManager.tabs.reorder(result.source.index,result.destination?.index!)
     },
     [layoutManager]

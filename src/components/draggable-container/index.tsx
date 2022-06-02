@@ -1,12 +1,13 @@
 // @ts-nocheck
-import { DockLayout, } from "rc-dock";
-import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { DockLayout, LayoutData, } from "rc-dock";
+import { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { selectLayoutDockBox } from "./utils";
 import * as savedLayout from "./saved-layouts"
+import { select } from "@/utils/select"
+import { setTabWidgets, tabs } from "@/states/tabs"
+import { useSnapshot } from "valtio"
 
-interface IDraggableContainer {
-  onCreateNewWidget?: Function;
-  savedLayoutType: string;
+interface DraggableContainerProps {
   draggableRef?: React.MutableRefObject;
 }
 
@@ -57,83 +58,94 @@ const getTab = function getTab(id) {
   };
 };
 
-export const DraggableContainer: React.FC<IDraggableContainer> = ({
-  savedLayoutType,
-  draggableRef
-}) => {
+let tabId = 0
 
-  //#region REF
+export const DraggableContainer: React.FunctionComponent<DraggableContainerProps> = props => {
   const dockLayoutNode = useRef<DockLayout>();
-  //#endregion
+  const tabsSnap = useSnapshot(tabs)
 
-  //#region STATE
-  const [tabCount, setTabCount] = useState(0)
-  const [widget, setWidgets] = useState(box);
-  const [activePanelId, setActivePanelId] = useState("");
-  //#endregion
+  const dockLayout = useMemo(
+    (): LayoutData => {
+      const layout = select(
+        typeof tabsSnap.currentActive?.widgets,
+        {
+          string: savedLayout[tabsSnap.currentActive?.widgets],
+          object: tabsSnap.currentActive?.widgets
+        }
+      )
 
-  //#region LIFECYCLE
-  useImperativeHandle(draggableRef, () => ({
-    onClickNewWidget
-  }))
-  useEffect(() => {
-    if (savedLayoutType.length) {
-      setWidgets(savedLayout[savedLayoutType]);
-    }
-  }, [savedLayoutType])
-  //#endregion
+      if (layout) return layout
 
-
-
-  const onLoadTab = (tab) => {
-    const { id } = tab;
-    const tabData = {
-      ...tab,
-      title: id,
-      closable: true,
-      content: <div>{id}</div>,
-      group: "closeAll"
-    }
-    return tabData;
-  }
+      return {
+        dockbox: {
+          mode: 'vertical',
+          children: []
+        }
+      }
+    },
+    [tabsSnap]
+  )
 
   const addWidget = (panelId) => {
     const panelData = dockLayoutNode.current.find(panelId);
-    const newTabId = `tab${tabCount + 1}`;
-    setTabCount(tabCount + 1);
+    const newTabId = `tab${++tabId }`;
     const newTab = getTab(newTabId);
-    dockLayoutNode.current.dockMove(newTab, panelData, "middle");
-
+    
+    dockLayoutNode.current.dockMove(
+      newTab, panelData, "middle"
+    );
   }
 
-  const onClickNewWidget = () => {
-    const { children } = selectLayoutDockBox(dockLayoutNode.current.state.layout);
+  //#region LIFECYCLE
+  useImperativeHandle(props.draggableRef, () => ({
+    addWidget: () => {
+      const { 
+        children: [child] 
+      } = selectLayoutDockBox(dockLayoutNode.current.state.layout);
+  
+      addWidget(child.id);
+    }
+  }))
+  //#endregion
 
-    const [child] = children;
-    const { id } = child;
-    setActivePanelId(id);
-    setWidgets({ ...widget, newBox })
-    addWidget(id);
+  const onLoadTab = (tab) => {
+    const tabData = {
+      ...tab,
+      title: tab.id,
+      closable: true,
+      content: <div>{tab.id}</div>,
+      group: "closeAll"
+    }
+
+    return tabData;
   }
 
   const onLayoutChange = (newLayout) => {
-    setWidgets(newLayout);
+    setTabWidgets(tabsSnap.active, newLayout)
   }
 
   const onPanelLoaded = (savedPanel, loadedPanel) => {
-    const { id } = savedPanel;
-    setActivePanelId(id);
+    // setActivePanelId(savedPanel.id);
   }
+
   return (
     <>
       <DockLayout
         ref={dockLayoutNode}
-        layout={widget}
+        layout={dockLayout}
         onLayoutChange={onLayoutChange}
         loadTab={onLoadTab}
         afterPanelLoaded={onPanelLoaded}
-        style={{ position: 'absolute', left: 10, top: 60, right: 10, bottom: 10 }}
-
+        style={
+          { 
+            position: 'absolute', 
+            left: 12, 
+            top: 12, 
+            right: 12,
+            bottom: 12,
+            zIndex: 0
+          }
+         }
       />
     </>
   )

@@ -6,7 +6,7 @@ import { ArrayType } from '@/types/ArrayType'
 import { tabs } from '@/states/tabs'
 
 export interface TabsPaneProps {
-  tab: ArrayType<typeof tabs['child']>
+  tab: any
   draggable: DraggableProvided
   active: boolean
   onFocus: (tabId: string) => void
@@ -68,8 +68,6 @@ export const TabsPane: React.FunctionComponent<TabsPaneProps> = ({ draggable, ta
 
       return {
         bgColor: 'gray.800',
-        borderBottomLeftRadius: '2xl',
-        borderBottomRightRadius: '2xl'
       }
     },
     [props.active]

@@ -4,8 +4,7 @@ import { addTab, removeTab, reorderTabs } from "@/states/tabs"
 
 export interface LayoutController {
   dock: {
-    addWidget: (panelId: string) => void
-    getLayoutState: () => any
+    addWidget: () => void
   }
   tabs: {
     add: typeof addTab
