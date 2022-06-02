@@ -1,32 +1,48 @@
+import { LayoutBase, LayoutData } from 'rc-dock'
 import { proxy } from 'valtio'
 
 export const tabs = proxy(
   {
-    active: 'preset:trading',
-    tabs: [
+    active: '',
+    child: [] as Array<
       {
-        id: 'preset:trading',
-        title: 'Trading',
-      },
-      {
-        id: 'preset:position',
-        title: 'Position',
-      },
-      {
-        id: 'custom:1',
-        title: 'Custom'
+        id: string
+        title: string
+        options: {
+          closeable: boolean
+        },
+        widget: LayoutBase
       }
-    ]
+    >
   }
 )
 
-export function reorderTabs(startIndex: number, endIndex: number): void {
-  const selectedTab = tabs.tabs[startIndex]
+let tabId = 2
 
-  if (selectedTab) {
-    if (endIndex != undefined) {
-      tabs.tabs.splice(startIndex, 1);
-      tabs.tabs.splice(endIndex, 0, selectedTab);
+export function addTab(window?: string): void {
+  const tabState = {
+    id: `custom:${++tabId}`,
+    title: `Custom`,
+    options: {
+      closeable: true,
     }
+  }
+
+  tabs.child.push(tabState)
+}
+
+export function removeTab(tabId: string): void  {
+  if (tabId == tabs.active) {
+    tabs.active = tabs.child[tabs.child.length - 2].id
+  }
+
+  tabs.child = tabs.child.filter(child => child.id != tabId)
+}
+
+export function reorderTabs(startIndex: number, endIndex: number): void {
+  const selectedTab = tabs.child[startIndex]
+  if (endIndex != undefined) {
+    tabs.child.splice(startIndex, 1);
+    tabs.child.splice(endIndex, 0, selectedTab);
   }
 }

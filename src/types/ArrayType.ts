@@ -1,1 +1,1 @@
-export type ArrayType<T extends any[]> = T extends Array<infer C> ? C : never 
+export type ArrayType<T extends any[] | readonly any[]> = T extends Array<infer C> ? C : never 
