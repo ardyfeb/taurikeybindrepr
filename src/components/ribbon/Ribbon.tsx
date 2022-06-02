@@ -36,9 +36,9 @@ const SavedLayoutMenu = ({ onClickLayout }: any) => {
   return (
     <Flex
       px="2"
-      borderBottomColor="gray.700"
+      borderBottomColor="gray.600"
       borderBottomWidth={1}
-      bgColor="gray.800"
+      bgColor="gray.700"
     >
       {
         layoutType.map((layout) => (
