@@ -17,42 +17,45 @@ export const tabs = proxyWithComputed(
     >
   },
   {
-    currentActive: snap => snap.child.find(c => c.id == snap.active)
+    currentActive: snap => snap.child.find(c => c.id === snap.active)
   }
 )
 
 let tabId = 2
 
 export function addTab(window?: string): void {
+  console.log('window', window)
+  const id = `custom:${++tabId}`;
   const tabState = {
-    id: `custom:${++tabId}`,
+    id,
     title: `Custom`,
     options: {
       closeable: true,
     }
   }
 
+  tabs.active = id;
   tabs.child.push(tabState)
 }
 
-export function removeTab(tabId: string): void  {
-  if (tabId == tabs.active) {
+export function removeTab(tabId: string): void {
+  if (tabId === tabs.active) {
     tabs.active = tabs.child[tabs.child.length - 2].id
   }
 
-  tabs.child = tabs.child.filter(child => child.id != tabId)
+  tabs.child = tabs.child.filter(child => child.id !== tabId)
 }
 
 export function reorderTabs(startIndex: number, endIndex: number): void {
   const selectedTab = tabs.child[startIndex]
-  if (endIndex != undefined) {
+  if (endIndex !== undefined) {
     tabs.child.splice(startIndex, 1);
     tabs.child.splice(endIndex, 0, selectedTab);
   }
 }
 
-export function setTabWidgets(tabId: string, widgets: LayoutData): void  {
-  const childIdx  = tabs.child.findIndex(c => c.id == tabId)
+export function setTabWidgets(tabId: string, widgets: LayoutData): void {
+  const childIdx = tabs.child.findIndex(c => c.id === tabId)
 
   if (!!~childIdx) {
     tabs.child[childIdx].widgets = widgets

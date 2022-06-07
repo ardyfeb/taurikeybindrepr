@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
-import { Box, Flex, Button } from '@chakra-ui/react'
+import { useCallback, useState } from "react";
+import { Box, Flex, Button } from "@chakra-ui/react";
+import { window } from '@tauri-apps/api'
 
-import { RibbonTabs } from './RibbonTabs'
-import { useLayoutManager } from '@/hooks/useLayoutManager'
+import { RibbonTabs } from "./RibbonTabs";
+import { useLayoutManager } from "@/hooks/useLayoutManager";
 
 interface IRibbon {
   onClickLayout: Function;
@@ -12,26 +13,26 @@ interface IRibbon {
 const layoutType = [
   {
     title: "Home",
-    type: "home"
+    type: "home",
   },
   {
     title: "Order",
-    type: "order"
+    type: "order",
   },
   {
     title: "Risk Management",
-    type: "riskManagement"
-  }];
-
+    type: "riskManagement",
+  },
+];
 
 const SavedLayoutMenu = ({ onClickLayout }: any) => {
   const [selectedLayout, setSelectedLayout] = useState("home");
 
   const onClickLayoutMenu = (type: string) => {
-    console.log("TEST")
+    console.log("TEST");
     setSelectedLayout(type);
     onClickLayout(type);
-  }
+  };
 
   return (
     <Flex
@@ -40,31 +41,28 @@ const SavedLayoutMenu = ({ onClickLayout }: any) => {
       borderBottomWidth={1}
       bgColor="gray.700"
     >
-      {
-        layoutType.map((layout) => (
-          <RibbonTabs
-            active={selectedLayout === layout.type}
-            title={layout.title}
-            key={layout.type}
-            onClick={() => onClickLayoutMenu(layout.type)}
-          />
-        ))
-      }
+      {layoutType.map((layout) => (
+        <RibbonTabs
+          active={selectedLayout === layout.type}
+          title={layout.title}
+          key={layout.type}
+          onClick={() => onClickLayoutMenu(layout.type)}
+        />
+      ))}
     </Flex>
   );
-}
+};
 
+export const Ribbon: React.FunctionComponent<IRibbon> = (props) => {
+  const layoutManager = useLayoutManager();
 
-export const Ribbon: React.FunctionComponent<IRibbon> = props => {
-  const layoutManager = useLayoutManager()
+  const addNewWidget = useCallback((): void => {
+    layoutManager.dock.addWidget();
+  }, [layoutManager]);
 
-  const addNewWidget = useCallback(
-    (): void => {
-      layoutManager.dock.addWidget()
-    },
-    [layoutManager]
-  )
-  
+  const openKeyboardShortcut = () =>
+    layoutManager.tabs.add();
+
   return (
     <>
       <SavedLayoutMenu onClickLayout={props.onClickLayout} />
@@ -85,9 +83,22 @@ export const Ribbon: React.FunctionComponent<IRibbon> = props => {
             >
               Add Widget
             </Button>
+            <Button
+              margin="0 2px"
+              _focus={{ boxShadow: "none" }}
+              _hover={{ background: "transparent", color: "gray" }}
+              textColor="gray.700"
+              border={0}
+              size="xs"
+              bg="facebook.200"
+              fontSize={10}
+              onClick={openKeyboardShortcut}
+            >
+              Keyboard Shortcuts
+            </Button>
           </div>
         </Box>
       </Flex>
     </>
-  )
-}
+  );
+};
